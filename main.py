@@ -47,6 +47,7 @@ class Mentor:
         self.name = name
         self.surname = surname
         self.courses_attached = []
+        self.rates = {}
 
 
 class Lecturer(Mentor):
@@ -147,6 +148,7 @@ reviewer_two.rate_hw(student_two, 'Git', 9)
 student_one.rate_hw(lecturer_two, 'Git', 10)
 student_one.rate_hw(lecturer_two, 'Git', 9)
 student_one.rate_hw(lecturer_two, 'Git', 8)
+
 student_two.rate_hw(lecturer_two, 'Git', 9)
 student_two.rate_hw(lecturer_two, 'Git', 10)
 student_two.rate_hw(lecturer_two, 'Git', 7)
@@ -164,3 +166,48 @@ print()
 print(lecturer_one.__lt__(lecturer_two))
 print()
 print(student_one.__lt__(student_two))
+print()
+
+students_list = [student_one, student_two]
+lecturer_list = [lecturer_one, lecturer_two]
+
+
+def grades_students(students_list, course):
+    overall_student_rating = 0
+    lectors = 0
+    for listener in students_list:
+        if course in listener.grades.keys():
+            average_student_score = 0
+            for grades in listener.grades[course]:
+                average_student_score += grades
+            overall_student_rating = average_student_score / len(listener.grades[course])
+            average_student_score += overall_student_rating
+            lectors += 1
+    if overall_student_rating == 0:
+        return f'Оценок по этому предмету нет'
+    else:
+        return f'{overall_student_rating / lectors:.2}'
+
+
+def grades_lecturers(lecturer_list, course):
+    overall_student_rating = 0
+    lectors = 0
+    for listener in lecturer_list:
+        if course in listener.grades.keys():
+            average_student_score = 0
+            for rates in listener.grades[course]:
+                average_student_score += rates
+            overall_student_rating = average_student_score / len(listener.grades[course])
+            average_student_score += overall_student_rating
+            lectors += 1
+    if overall_student_rating == 0:
+        return f'Оценок по этому предмету нет'
+    else:
+        return f'{overall_student_rating / lectors:.2}'
+
+
+print(f'Средняя оценка студентов по курсу "Git": {grades_students(students_list, "Git")}')
+print(f'Средняя оценка студентов по курсу "Python": {grades_students(students_list, "Python")}')
+
+print(f'Средняя оценка лекторов по курсу "Git": {grades_lecturers(lecturer_list, "Git")}')
+print(f'Средняя оценка лекторов по курсу "Python": {grades_lecturers(lecturer_list, "Python")}')
