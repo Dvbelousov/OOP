@@ -96,7 +96,9 @@ class Reviewer(Mentor):
 
 lecturer_one = Lecturer('Сергей', 'Воробьев')
 lecturer_one.courses_attached += ['Python']
+lecturer_one.courses_attached += ['Git']
 lecturer_two = Lecturer('Петр', 'Уткин')
+lecturer_two.courses_attached += ['Python']
 lecturer_two.courses_attached += ['Git']
 
 student_one = Student('Ксения', 'Кукушкина', 'ж')
@@ -137,6 +139,14 @@ student_two.rate_hw(lecturer_one, 'Python', 9)
 student_two.rate_hw(lecturer_one, 'Python', 10)
 student_two.rate_hw(lecturer_one, 'Python', 9)
 
+student_one.rate_hw(lecturer_one, 'Git', 8)
+student_one.rate_hw(lecturer_one, 'Git', 9)
+student_one.rate_hw(lecturer_one, 'Git', 18)
+
+student_two.rate_hw(lecturer_one, 'Git', 9)
+student_two.rate_hw(lecturer_one, 'Git', 9)
+student_two.rate_hw(lecturer_one, 'Git', 9)
+
 reviewer_one.rate_hw(student_two, 'Python', 8)
 reviewer_one.rate_hw(student_two, 'Python', 8)
 reviewer_one.rate_hw(student_two, 'Python', 9)
@@ -149,9 +159,18 @@ student_one.rate_hw(lecturer_two, 'Git', 10)
 student_one.rate_hw(lecturer_two, 'Git', 9)
 student_one.rate_hw(lecturer_two, 'Git', 8)
 
+student_two.rate_hw(lecturer_two, 'Python', 9)
+student_two.rate_hw(lecturer_two, 'Python', 10)
+student_two.rate_hw(lecturer_two, 'Python', 7)
+
+student_one.rate_hw(lecturer_two, 'Python', 10)
+student_one.rate_hw(lecturer_two, 'Python', 9)
+student_one.rate_hw(lecturer_two, 'Python', 8)
+
 student_two.rate_hw(lecturer_two, 'Git', 9)
 student_two.rate_hw(lecturer_two, 'Git', 10)
 student_two.rate_hw(lecturer_two, 'Git', 7)
+
 
 print('Лекторы:')
 print(lecturer_one)
@@ -173,41 +192,31 @@ lecturer_list = [lecturer_one, lecturer_two]
 
 
 def grades_students(students_list, course):
-    overall_student_rating = 0
-    lectors = 0
-    for listener in students_list:
-        if course in listener.grades.keys():
-            average_student_score = 0
-            for grades in listener.grades[course]:
-                average_student_score += grades
-            overall_student_rating = average_student_score / len(listener.grades[course])
-            average_student_score += overall_student_rating
-            lectors += 1
-    if overall_student_rating == 0:
-        return f'Оценок по этому предмету нет'
-    else:
-        return f'{overall_student_rating / lectors:.2}'
+    a = []
+    for el in students_list:
+        if course in el.courses_in_progress:
+            for k in el.grades[course]:
+                a.append(k)
+        else:
+            print('Такой курс не изучали')
+    return f'{sum(a) / len(a):.2}'
 
 
 def grades_lecturers(lecturer_list, course):
-    overall_student_rating = 0
-    lectors = 0
-    for listener in lecturer_list:
-        if course in listener.grades.keys():
-            average_student_score = 0
-            for rates in listener.grades[course]:
-                average_student_score += rates
-            overall_student_rating = average_student_score / len(listener.grades[course])
-            average_student_score += overall_student_rating
-            lectors += 1
-    if overall_student_rating == 0:
-        return f'Оценок по этому предмету нет'
-    else:
-        return f'{overall_student_rating / lectors:.2}'
+    a = []
+    for el in lecturer_list:
+        if course in el.courses_attached:
+            for k in el.grades[course]:
+                a.append(k)
+        else:
+            print('Такой курс не преподавали')
+    return f'{sum(a) / len(a):.2}'
 
 
 print(f'Средняя оценка студентов по курсу "Git": {grades_students(students_list, "Git")}')
+print()
 print(f'Средняя оценка студентов по курсу "Python": {grades_students(students_list, "Python")}')
-
+print()
 print(f'Средняя оценка лекторов по курсу "Git": {grades_lecturers(lecturer_list, "Git")}')
+print()
 print(f'Средняя оценка лекторов по курсу "Python": {grades_lecturers(lecturer_list, "Python")}')
